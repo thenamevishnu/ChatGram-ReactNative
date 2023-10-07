@@ -1,12 +1,25 @@
 import { useEffect } from "react";
 import { Image, SafeAreaView } from "react-native";
+import { getMyData } from "../Services/myData";
 
 export default function WelcomeScreen({ navigation }) {
 
     useEffect(() => {
         setTimeout(() => {
-            navigation.navigate("chatList")
-        }, 100);
+            getMyData().then(res => {
+                if(res){
+                    navigation.reset({
+                        index:0,
+                        routes:[{name:"chatList"}]
+                    })
+                }else{
+                    navigation.reset({
+                        index:0,
+                        routes:[{name:"login"}]
+                    })
+                }
+            })
+        }, 1500);
     },[])
 
     return (

@@ -6,14 +6,14 @@ import { View } from 'react-native'
 function ActionBar({ route }) {
 
     const userData = useRef(null)
-    userData.current = route.params.item
+    userData.current = route.item
 
     return (
         <SafeAreaView className="px-6 bg-[#111] p-2 flex-row justify-between items-center">
             <View className="flex-row items-center">
-                <Image source={{uri: userData.current.pic}} className="w-16 h-16 rounded-full"/>
+                <Image source={{uri: userData.current.users[0].pic}} className="w-16 h-16 rounded-full"/>
                 <View className="ml-2">
-                    <Text className="text-white text-xl">{userData.current.name}</Text>
+                    <Text className="text-white text-xl">{userData.current.users[0].user}</Text>
                     <Text className="text-white text-sm">Online</Text>
                 </View>
             </View>
