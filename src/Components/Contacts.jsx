@@ -1,17 +1,15 @@
 import { Image, SafeAreaView, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from "react-native"
 import MenuHeader from "./MenuHeader"
 import { getMyData } from "../Services/myData"
-import { createChat, filterContact, getUserExist } from "../Services/chat"
+import { createChat, getUserExist } from "../Services/chat"
 import { TextInput } from "react-native"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 
 export default function Contacts({ navigation, data }) {
 
-    const [showSearch, setShowSearch] = useState(false)
     const [search, setSearch] = useState("")
-    const contacts = useRef(null)
-    contacts.current = data
+    const [contacts, setContacts] = useState([])
     
     const getNumber = async (item) => {
         if(item.phoneNumbers){
@@ -36,15 +34,20 @@ export default function Contacts({ navigation, data }) {
         }
     }
 
+    useEffect(() => {
+        const newList = data.filter(item => item.name.toLowerCase().slice(0, search.toLowerCase().length) == search.toLowerCase() || (item.phoneNumbers && item.phoneNumbers[0].number.toString().replace(/\s+/igm, "").slice(0, search.length) == search.toLowerCase()))
+        setContacts(newList)
+    }, [search])
+
     return (
         <SafeAreaView> 
-           <MenuHeader title={"Contacts"} icon={""} setShowSearch={setShowSearch}/>
-           {showSearch && <View className="bg-[#222222] px-2 pt-1.5">
-                <TextInput onChangeText={text => setSearch(text)} value={search} className="p-2 border-2 border-gray-600 rounded-xl text-gray-400 placeholder:text-gray-400" placeholder="search number or name..."></TextInput>
-           </View>}
+            <MenuHeader title={"Contacts"} icon={""}/>
+            <View className="bg-[#222222] px-2 pt-1.5 text-white">
+                <TextInput onChangeText={text => setSearch(text)} value={search} placeholder="Search number or name..." className="p-2 border-2 placeholder:text-white border-gray-600 rounded-xl text-white" placeholderTextColor={"white"}></TextInput>
+           </View>
            <ScrollView className="bg-[#222222] w-screen h-screen pb-42" contentContainerStyle={{paddingBottom:60}}>
                 {
-                    contacts.current?.filter(item => item.phoneNumbers && item.phoneNumbers[0]?.number?.length >= 10).map((item, index) => {
+                    contacts.length > 0 && contacts?.filter(item => item.phoneNumbers && item.phoneNumbers[0]?.number?.length >= 10).map((item, index) => {
                         return(
                             <TouchableOpacity activeOpacity={1} key={index} className="flex-row active:bg-black items-center justify-between p-2 relative border-b-2" onPress={async ()=>await getNumber(item)}>
                                 <View className="flex-row items-center">
@@ -59,6 +62,11 @@ export default function Contacts({ navigation, data }) {
                             </TouchableOpacity>
                         )
                     })
+                }
+                {
+                    contacts.length == 0 && <View className="flex-row justify-center items-center mt-10">
+                        <Text className="text-gray-500 text-lg text-center p-3 font-bold">No Contcats found with {search}!</Text>
+                    </View>
                 }
            </ScrollView>     
            

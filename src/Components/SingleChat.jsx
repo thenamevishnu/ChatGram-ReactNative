@@ -8,6 +8,7 @@ import { useMyContext } from '../Hooks/ContextApi'
 import { getMyData } from '../Services/myData'
 import { getMessagesByChat, sendMessageNow, setUnreadMessage } from '../Services/chat'
 import { skelten } from '../constants'
+import { KeyboardAvoidingView } from 'react-native'
 
 export default function SingleChat({ route , navigation }) {
 
@@ -66,7 +67,7 @@ export default function SingleChat({ route , navigation }) {
     }
     
     return (
-        <SafeAreaView className="h-screen">
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="h-screen">
             
             <ActionBar route={route.params} className="mb-1"/>
 
@@ -88,10 +89,10 @@ export default function SingleChat({ route , navigation }) {
                     })
                 }
             </ScrollView>
-            <View className="bg-[#222222] px-5 flex-row items-center">
+            <View className="bg-[#222222] flex-row items-center">
                 <TextInput numberOfLines={2} multiline className="p-3 rounded-2xl mb-2 bg-white w-5/6" placeholder='Message...' value={message} onChangeText={(text) => setMessage(text)}></TextInput>
                 <Text className="bg-white text-green-900 mb-2 rounded-full p-4 ml-3" onPress={sendMessage}><FontAwesome name={"paper-plane"} size={22}/></Text>
             </View>
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     )
 }

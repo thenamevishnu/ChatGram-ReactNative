@@ -102,15 +102,27 @@ export const setUnreadMessage = async (receiver,chat,setZero=false) => {
     }
 }
 
-export const filterContact = async (inputString,lettersToCheck) => {
-    let containsAllLetters = true;
-console.log(inputString, lettersToCheck);
-    for (const letter of lettersToCheck) {
-        if (!inputString.includes(letter)) {
-            containsAllLetters = false;
-            break;
-        }
+export const userNameCheck = async (username) => {
+    try{
+        const {data} = await api_call.get(`/usernameCheck/${username}`)
+        return data.status
+    }catch(err){
+        ToastAndroid.show(
+            err,
+            ToastAndroid.BOTTOM
+        )
     }
+}
 
-    return containsAllLetters
+export const profileUpdate = async (profile, user) => {
+    try{
+        profile.user = user
+        const {data} = await api_call.post(`/profileUpdate`,{profile})
+        return data.status
+    }catch(err){
+        ToastAndroid.show(
+            err,
+            ToastAndroid.BOTTOM
+        )
+    }
 }

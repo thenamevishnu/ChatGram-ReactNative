@@ -31,11 +31,7 @@ export default function Login({ navigation }) {
         try{
             const {data} = await api_call.post("/verify_otp", {number, otp}) 
             if(data.status){
-                await localStorage.setItem("localDB", JSON.stringify(data.user))
-                navigation.reset({
-                    index:0,
-                    routes:[{name:"chatList"}]
-                })
+                navigation.navigate("initalProfile", {item: data.user})
             }
         }catch(err){
             window.alert(err)

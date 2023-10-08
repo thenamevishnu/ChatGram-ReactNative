@@ -10,6 +10,7 @@ import { getAllChatList } from '../Services/chat'
 import { getMyData } from '../Services/myData'
 import { FontAwesome } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
+import Menu from './Menu'
 
 export default function ChatList({ navigation }) {
 
@@ -50,7 +51,7 @@ export default function ChatList({ navigation }) {
     return (
         <>
         <SafeAreaView> 
-           <MenuHeader title={"ChatGram"} icon={user.pic} setShowSearch={setShowSearch}/>
+           <MenuHeader title={"ChatGram"} icon={user.pic} setShowSearch={setShowSearch} navigation={navigation}/>
            {showSearch && <View className="bg-[#222222] px-2 pt-1.5">
                 <TextInput className="p-2 border-2 border-gray-600 rounded-xl text-gray-400 placeholder:text-gray-400" placeholder="search number or name..."></TextInput>
            </View>}
@@ -65,7 +66,7 @@ export default function ChatList({ navigation }) {
                                     </View>
                                     <View className="ml-3">
                                         <Text className="text-white mb-2">{item.users[0].user}</Text>
-                                        <Text className="text-gray-400">{item.lastMessage ?? <><FontAwesome name={"dot-circle-o"} color={"green"}/> <Text>New</Text></>}</Text>
+                                        <Text className="text-gray-400">{item.lastMessage ? item.lastMessage.length > 10 ? item.lastMessage.slice(0, 10)+"..." : item.lastMessage : <><FontAwesome name={"dot-circle-o"} color={"green"}/> <Text>New</Text></>}</Text>
                                     </View>
                                 </View>
                                 <View>
@@ -85,6 +86,7 @@ export default function ChatList({ navigation }) {
            
         </SafeAreaView>
         <NewChat navigation={navigation}/>
+        <Menu navigation={navigation}/>
         </>
     )
 }
